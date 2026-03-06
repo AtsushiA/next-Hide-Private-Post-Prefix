@@ -3,7 +3,7 @@
  * Plugin Name: NExT Hide Private Post Prefix
  * Plugin URI:  https://github.com/
  * Description: ログインユーザーに対しても、非公開記事を投稿一覧から除外します。
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 6.1
  * Requires PHP:      7.0
  * Author:            NExT-Season 
