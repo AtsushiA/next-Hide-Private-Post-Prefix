@@ -6,8 +6,8 @@
  * Version:           1.0.0
  * Requires at least: 6.1
  * Requires PHP:      7.0
- * Author:            NExT-Season with WordPress Telex
- * Author URI:        https://next-season.net/
+ * Author:            NExT-Season 
+ * Author URI:        https://next-season.net
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: nhpp
@@ -18,11 +18,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * ログインユーザーに対しても非公開記事を投稿一覧・アーカイブ・検索結果から除外する。
+ * ログインユーザーに対しても非公開記事をフロントエンドのすべてのクエリから除外する。
  *
  * WordPress のデフォルト動作ではログインユーザーに非公開記事が表示されるが、
  * このフックにより未ログインユーザーと同じ挙動に統一する。
- * 管理画面・REST API・単一記事ページはこのフックの対象外。
+ * メインループだけでなく、Query Loop ブロック・Advanced Query Loop 等の
+ * セカンダリクエリにも適用される。
+ * 管理画面・REST API は対象外。
  *
  * @param WP_Query $query 処理中のクエリオブジェクト
  */
@@ -32,16 +34,8 @@ function nhpp_exclude_private_posts_from_loop( WP_Query $query ): void {
 		return;
 	}
 
-	// メインループのアーカイブ・フロントページ・検索結果のみ対象
-	if ( ! $query->is_main_query() ) {
-		return;
-	}
-
-	if ( ! $query->is_archive() && ! $query->is_home() && ! $query->is_search() ) {
-		return;
-	}
-
 	// ログインしていない場合は WordPress のデフォルト挙動に任せる
+	// （未ログインでは private 記事はもともと表示されない）
 	if ( ! is_user_logged_in() ) {
 		return;
 	}
