@@ -6,7 +6,7 @@
  * Version:           1.1.0
  * Requires at least: 6.1
  * Requires PHP:      7.0
- * Author:            NExT-Season 
+ * Author:            NExT-Season
  * Author URI:        https://next-season.net
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -31,6 +31,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 function nhpp_exclude_private_posts_from_loop( WP_Query $query ): void {
 	// 管理画面・REST API は対象外
 	if ( is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+		return;
+	}
+
+	// プレビュー・単一記事は対象外
+	// （下書きプレビューは post_status が空のまま WordPress が内部処理するため、
+	// ここで 'publish' に上書きすると draft が見つからなくなる）
+	if ( $query->is_preview() || $query->is_singular() ) {
 		return;
 	}
 
